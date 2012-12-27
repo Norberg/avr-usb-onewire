@@ -8,8 +8,9 @@
 #include "usbdrv.h"
 #include "ctrl_msg.h"
 
-static uchar dataReceived = 0, dataLength = 0;
-char eeprom[16] = "42!";
+uint8_t EEMEM eeprom_string[32];
+static uchar data_received = 0, data_length = 0;
+char eeprom[sizeof(eeprom_string)];
 
 // this gets called when custom control message is received
 USB_PUBLIC uchar usbFunctionSetup(uchar data[8])
@@ -26,14 +27,14 @@ USB_PUBLIC uchar usbFunctionSetup(uchar data[8])
 			PORTB &= ~1; // turn LED off
 			return 0;
 		case USB_READ_EEPROM:
-			eeprom_read_block (( void *) & eeprom , ( const void *) 1 , 16);
+			eeprom_read_block ((void *) & eeprom, (const void *) & eeprom_string, sizeof(eeprom_string));
 			usbMsgPtr = (int)eeprom;
 			return sizeof(eeprom);
 		case USB_WRITE_EEPROM:
-			dataLength = (uchar)rq->wLength.word;
-			dataReceived = 0;
-			if(dataLength > sizeof(eeprom)) // limit to buffer size
-				dataLength = sizeof(eeprom);
+			data_length = (uchar)rq->wLength.word;
+			data_received = 0;
+			if(data_length > sizeof(eeprom_string)) // limit to buffer size
+				data_length = sizeof(eeprom_string);
 			return USB_NO_MSG; // usbFunctionWrite will be called now		
 	}
 
@@ -42,11 +43,11 @@ USB_PUBLIC uchar usbFunctionSetup(uchar data[8])
 
 USB_PUBLIC uchar usbFunctionWrite(uchar *data, uchar len)
 {
-	uchar i;
-	for(i = 0; dataReceived < dataLength && i < len; i++, dataReceived++)
-		eeprom[dataReceived] = data[i];
-	eeprom_update_block(( const void *) & eeprom , ( void *) 1 , 16);
-	return (dataReceived == dataLength); // 1 if we received it all, 0 if not
+	uint8_t i;
+	for(i = 0; data_received < data_length && i < len; i++, data_received++)
+		eeprom[data_received] = data[i];
+	eeprom_update_block((const void *) & eeprom, (void *) & eeprom_string, sizeof(eeprom_string));
+	return (data_received == data_length); // 1 if we received it all, 0 if not
 }
 
 int main()
