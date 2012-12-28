@@ -5,12 +5,12 @@ DUDE = avrdude
 
 # If you are not using ATtiny2313 and the USBtiny programmer, 
 # update the lines below to match your configuration
-CFLAGS = -Wall -Os -Iusbdrv -mmcu=attiny2313
+CFLAGS = -Wall -Os -Iusbdrv -mmcu=attiny2313 -DF_CPU=20000000
 OBJFLAGS = -j .text -j .data -O ihex
 DUDEFLAGS = -p attiny2313 -c usbasp
 
-# Object files for the firmware (usbdrv/oddebug.o not strictly needed I think)
-OBJECTS = usbdrv/usbdrv.o usbdrv/oddebug.o usbdrv/usbdrvasm.o main.o
+# Object files for the firmware
+OBJECTS = usbdrv/usbdrv.o usbdrv/usbdrvasm.o main.o onewire.o
 
 # By default, build the firmware and command-line client, but do not flash
 all: main.hex $(CMDLINE)
@@ -26,6 +26,7 @@ clean:
 # From .elf file to .hex
 %.hex: %.elf
 	$(OBJCOPY) $(OBJFLAGS) $< $@
+	avr-size $@	
 
 # Main.elf requires additional objects to the firmware, not just main.o
 main.elf: $(OBJECTS)
@@ -33,7 +34,7 @@ main.elf: $(OBJECTS)
 
 # Without this dependance, .o files will not be recompiled if you change 
 # the config! I spent a few hours debugging because of this...
-$(OBJECTS): usbdrv/usbconfig.h
+$(OBJECTS): usbdrv/usbconfig.h onewire.h main.h
 
 # From C source to .o object file
 %.o: %.c	

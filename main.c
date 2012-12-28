@@ -1,24 +1,16 @@
-#include <avr/io.h>
-#include <avr/interrupt.h>
-#include <avr/eeprom.h>
-#include <avr/wdt.h>
-#define F_CPU 20000000L
-#include <util/delay.h>
-
-#include "usbdrv.h"
-#include "ctrl_msg.h"
+#include "main.h"
 
 uint8_t EEMEM eeprom_string[32];
 static uchar data_received = 0, data_length = 0;
 char eeprom[sizeof(eeprom_string)];
+uint8_t action_buffer, action = NO_ACTION, action_state = NO_STATE;
 
 // this gets called when custom control message is received
 USB_PUBLIC uchar usbFunctionSetup(uchar data[8])
 {
 	usbRequest_t *rq = (void *)data; // cast data to correct type
-		
-	// custom command is in the bRequest field
-	switch(rq->bRequest) 
+	action = rq->bRequest;	
+	switch(action) 
 	{
 		case USB_LED_ON:
 			PORTB |= 1; // turn LED on
@@ -35,10 +27,31 @@ USB_PUBLIC uchar usbFunctionSetup(uchar data[8])
 			data_received = 0;
 			if(data_length > sizeof(eeprom_string)) // limit to buffer size
 				data_length = sizeof(eeprom_string);
-			return USB_NO_MSG; // usbFunctionWrite will be called now		
+			return USB_NO_MSG; // usbFunctionWrite will be called now
+		case USB_ONEWIRE_READ:
+			action_state = PROCESSING; 
+			return 0;
+		case USB_ONEWIRE_WRITE:
+			action_buffer = rq->wValue.bytes[0];
+			return 0;
+		case USB_ONEWIRE_RESET:
+			action_state = PROCESSING; 
+			return 0;
+		case USB_ONEWIRE_READ_BIT:
+			action_state = PROCESSING; 
+			return 0;
+		case USB_ONEWIRE_WRITE_BIT:
+			action_buffer = rq->wValue.bytes[0];
+			return 0;
+		case USB_READ_RESULT:
+			if(action_state != PROCESSED)
+				return 0; // Result not ready yet
+			usbMsgPtr = (int)action_buffer;
+			action_state = NO_STATE;
+			return sizeof(action_buffer);
 	}
 
-	return 0; // should not get here
+	return 0;
 }
 
 USB_PUBLIC uchar usbFunctionWrite(uchar *data, uchar len)
@@ -70,6 +83,28 @@ int main()
 	while(1) {
 		wdt_reset(); // keep the watchdog happy
 		usbPoll();
+		switch(action)
+		{
+			case USB_ONEWIRE_READ:
+				action_buffer = read_byte();
+				action_state = PROCESSED;
+				break;
+			case USB_ONEWIRE_WRITE:
+				write_byte(action_buffer);
+				break;
+			case USB_ONEWIRE_RESET:
+				action_buffer = reset();
+				action_state = PROCESSED;
+				break;
+			case USB_ONEWIRE_READ_BIT:
+				action_buffer = read_bit();
+				action_state = PROCESSED;
+				break;
+			case USB_ONEWIRE_WRITE_BIT:
+				write_bit(action_buffer);
+				break;
+		}
+		action = NO_ACTION;
 	}
 		
 	return 0;
