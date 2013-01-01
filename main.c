@@ -2,8 +2,7 @@
 
 uint8_t EEMEM eeprom_string[32];
 static uchar data_received = 0, data_length = 0;
-char eeprom[sizeof(eeprom_string)];
-uint8_t action_buffer, action = NO_ACTION, action_state = NO_STATE;
+uint8_t action_buffer[32], action = NO_ACTION, action_state = NO_STATE;
 
 // this gets called when custom control message is received
 USB_PUBLIC uchar usbFunctionSetup(uchar data[8])
@@ -19,9 +18,9 @@ USB_PUBLIC uchar usbFunctionSetup(uchar data[8])
 			PORTB &= ~1; // turn LED off
 			return 0;
 		case USB_READ_EEPROM:
-			eeprom_read_block ((void *) & eeprom, (const void *) & eeprom_string, sizeof(eeprom_string));
-			usbMsgPtr = (int)eeprom;
-			return sizeof(eeprom);
+			eeprom_read_block ((void *) & action_buffer, (const void *) & eeprom_string, sizeof(eeprom_string));
+			usbMsgPtr = (int)action_buffer;
+			return sizeof(action_buffer);
 		case USB_WRITE_EEPROM:
 			data_length = (uchar)rq->wLength.word;
 			data_received = 0;
@@ -32,7 +31,7 @@ USB_PUBLIC uchar usbFunctionSetup(uchar data[8])
 			action_state = PROCESSING; 
 			return 0;
 		case USB_ONEWIRE_WRITE:
-			action_buffer = rq->wValue.bytes[0];
+			action_buffer[0] = rq->wValue.bytes[0];
 			return 0;
 		case USB_ONEWIRE_RESET:
 			action_state = PROCESSING; 
@@ -41,14 +40,19 @@ USB_PUBLIC uchar usbFunctionSetup(uchar data[8])
 			action_state = PROCESSING; 
 			return 0;
 		case USB_ONEWIRE_WRITE_BIT:
-			action_buffer = rq->wValue.bytes[0];
+			action_buffer[0] = rq->wValue.bytes[0];
 			return 0;
 		case USB_READ_RESULT:
 			if(action_state != PROCESSED)
-				return 0; // Result not ready yet
+			{
+				//Result not ready yet
+				action_buffer[15] = 0xff;
+				usbMsgPtr = (int)action_buffer[15];
+				return 1; 
+			}
 			usbMsgPtr = (int)action_buffer;
 			action_state = NO_STATE;
-			return sizeof(action_buffer);
+			return 1;
 	}
 
 	return 0;
@@ -58,8 +62,8 @@ USB_PUBLIC uchar usbFunctionWrite(uchar *data, uchar len)
 {
 	uint8_t i;
 	for(i = 0; data_received < data_length && i < len; i++, data_received++)
-		eeprom[data_received] = data[i];
-	eeprom_update_block((const void *) & eeprom, (void *) & eeprom_string, sizeof(eeprom_string));
+		action_buffer[data_received] = data[i];
+	eeprom_update_block((const void *) & action_buffer, (void *) & eeprom_string, sizeof(eeprom_string));
 	return (data_received == data_length); // 1 if we received it all, 0 if not
 }
 
@@ -86,22 +90,22 @@ int main()
 		switch(action)
 		{
 			case USB_ONEWIRE_READ:
-				action_buffer = read_byte();
+				action_buffer[0] = read_byte();
 				action_state = PROCESSED;
 				break;
 			case USB_ONEWIRE_WRITE:
-				write_byte(action_buffer);
+				write_byte(action_buffer[0]);
 				break;
 			case USB_ONEWIRE_RESET:
-				action_buffer = reset();
+				action_buffer[0] = reset();
 				action_state = PROCESSED;
 				break;
 			case USB_ONEWIRE_READ_BIT:
-				action_buffer = read_bit();
+				action_buffer[0] = read_bit();
 				action_state = PROCESSED;
 				break;
 			case USB_ONEWIRE_WRITE_BIT:
-				write_bit(action_buffer);
+				write_bit(action_buffer[0]);
 				break;
 		}
 		action = NO_ACTION;

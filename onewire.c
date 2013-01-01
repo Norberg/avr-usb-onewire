@@ -27,14 +27,14 @@ void write_bit(uint8_t value)
 uint8_t read_bit()
 {
 	uint8_t value;
-
+	cli();
 	OW_DDR |= _BV(OW_PIN); /* Output */
 	OW_PORT &= ~_BV(OW_PIN); /* Drive bus low */
 	_delay_us(6); /* Delay A(6us) */
-	OW_PORT |= _BV(OW_PIN); /* Release bus */
-	_delay_us(9); /* Delay E(9us) */
 	OW_DDR &= ~_BV(OW_PIN); /* Input */
+	_delay_us(9); /* Delay E(9us) */
 	value = OW_PORT_IN & _BV(OW_PIN); /* Read Bus */
+	sei();
 	_delay_us(55); /* Delay F(55us) */
 	return value;
 }

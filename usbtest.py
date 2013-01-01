@@ -36,24 +36,32 @@ def handleInput(dev):
 	elif sys.argv[1] == "onewire" and sys.argv[2] == "write":
 		dev.ctrl_transfer(REQUEST_TYPE_OUT, CtrlMsg.USB_ONEWIRE_WRITE, int(sys.argv[3]))
 def reset(dev):
-	dev.ctrl_transfer(REQUEST_TYPE_OUT, CtrlMsg.USB_ONEWIRE_RESET)
-	print dev.ctrl_transfer(REQUEST_TYPE_OUT, CtrlMsg.USB_READ_RESULT)
-	dev.ctrl_transfer(REQUEST_TYPE_OUT, CtrlMsg.USB_ONEWIRE_WRITE, 0xcc)
-	dev.ctrl_transfer(REQUEST_TYPE_OUT, CtrlMsg.USB_ONEWIRE_WRITE, 0x44)
-	dev.ctrl_transfer(REQUEST_TYPE_OUT, CtrlMsg.USB_ONEWIRE_RESET)
-	time.sleep(0.2)
-	print dev.ctrl_transfer(REQUEST_TYPE_OUT, CtrlMsg.USB_READ_RESULT)
-	dev.ctrl_transfer(REQUEST_TYPE_OUT, CtrlMsg.USB_ONEWIRE_WRITE, 0xcc)
-	dev.ctrl_transfer(REQUEST_TYPE_OUT, CtrlMsg.USB_ONEWIRE_WRITE, 0xbe)
-	dev.ctrl_transfer(REQUEST_TYPE_OUT, CtrlMsg.USB_ONEWIRE_RESET)
-	time.sleep(0.2)
-	print dev.ctrl_transfer(REQUEST_TYPE_OUT, CtrlMsg.USB_READ_RESULT)
-	dev.ctrl_transfer(REQUEST_TYPE_OUT, CtrlMsg.USB_ONEWIRE_READ)
-	time.sleep(0.2)
-	print dev.ctrl_transfer(REQUEST_TYPE_OUT, CtrlMsg.USB_READ_RESULT)
-	dev.ctrl_transfer(REQUEST_TYPE_OUT, CtrlMsg.USB_ONEWIRE_READ_BIT)
-	time.sleep(0.2)
-	print dev.ctrl_transfer(REQUEST_TYPE_OUT, CtrlMsg.USB_READ_RESULT)
+	onewire_send(dev, CtrlMsg.USB_ONEWIRE_RESET)
+	onewire_send(dev, CtrlMsg.USB_ONEWIRE_WRITE, 0xcc)
+	onewire_send(dev, CtrlMsg.USB_ONEWIRE_WRITE, 0x44)
+	time.sleep(1)
+	onewire_send(dev, CtrlMsg.USB_ONEWIRE_RESET)
+	onewire_send(dev, CtrlMsg.USB_ONEWIRE_WRITE, 0xcc)
+	onewire_send(dev, CtrlMsg.USB_ONEWIRE_WRITE, 0xbe)
+	print "Reading scratchpad"
+	for i in range(9):
+		onewire_send(dev, CtrlMsg.USB_ONEWIRE_READ)
+	print "Reset"
+	onewire_send(dev, CtrlMsg.USB_ONEWIRE_RESET)
+
+def onewire_send(dev, msg, value = None):
+	if value != None:
+		dev.ctrl_transfer(REQUEST_TYPE_OUT, msg, value)
+	else:
+		dev.ctrl_transfer(REQUEST_TYPE_OUT, msg)
+		
+	time.sleep(0.01)
+	res = None
+	if msg in (CtrlMsg.USB_ONEWIRE_READ, CtrlMsg.USB_ONEWIRE_READ_BIT, CtrlMsg.USB_ONEWIRE_RESET):
+		res = dev.ctrl_transfer(REQUEST_TYPE_IN, CtrlMsg.USB_READ_RESULT, data_or_wLength=32)
+		print hex(res.tolist()[0])
+		#time.sleep(0.01)
+	return res
 			
 def main():
 	dev = connect()
