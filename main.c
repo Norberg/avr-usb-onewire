@@ -29,6 +29,8 @@ USB_PUBLIC uchar usbFunctionSetup(uchar data[8])
 			return USB_NO_MSG; // usbFunctionWrite will be called now
 		case USB_ONEWIRE_READ:
 			action_state = PROCESSING; 
+			data_length = (uchar)rq->wLength.word; //Bytes to read
+			data_received = 0;
 			return 0;
 		case USB_ONEWIRE_WRITE:
 			action_buffer[0] = rq->wValue.bytes[0];
@@ -52,7 +54,7 @@ USB_PUBLIC uchar usbFunctionSetup(uchar data[8])
 			}
 			usbMsgPtr = (int)action_buffer;
 			action_state = NO_STATE;
-			return 1;
+			return sizeof(action_buffer);
 	}
 
 	return 0;
@@ -90,25 +92,33 @@ int main()
 		switch(action)
 		{
 			case USB_ONEWIRE_READ:
-				action_buffer[0] = read_byte();
-				action_state = PROCESSED;
+				action_buffer[data_received] = read_byte();
+				data_received++;
+				if(data_received == data_length)
+				{
+					action_state = PROCESSED;
+					action = NO_ACTION;
+				}
 				break;
 			case USB_ONEWIRE_WRITE:
 				write_byte(action_buffer[0]);
+				action = NO_ACTION;
 				break;
 			case USB_ONEWIRE_RESET:
 				action_buffer[0] = reset();
 				action_state = PROCESSED;
+				action = NO_ACTION;
 				break;
 			case USB_ONEWIRE_READ_BIT:
 				action_buffer[0] = read_bit();
 				action_state = PROCESSED;
+				action = NO_ACTION;
 				break;
 			case USB_ONEWIRE_WRITE_BIT:
 				write_bit(action_buffer[0]);
+				action = NO_ACTION;
 				break;
 		}
-		action = NO_ACTION;
 	}
 		
 	return 0;
