@@ -2,13 +2,9 @@ import time, sys
 import usb.core
 import usb.util
 from CtrlMsg import CtrlMsg
+from constants import *
+import onewire
 
-REQUEST_TYPE_IN = usb.util.build_request_type(usb.util.CTRL_IN,
-                                                   usb.util.CTRL_TYPE_VENDOR,
-                                                   usb.util.CTRL_RECIPIENT_DEVICE)
-REQUEST_TYPE_OUT = usb.util.build_request_type(usb.util.CTRL_OUT,
-                                                   usb.util.CTRL_TYPE_VENDOR,
-                                                   usb.util.CTRL_RECIPIENT_DEVICE)
 def match_manufacturer(dev):
 	if usb.util.get_string(dev,126, dev.iManufacturer) == "pthread.se":
 		return True
@@ -23,8 +19,10 @@ def connect():
 	return dev
 
 def handleInput(dev):
+	ow = onewire.OneWire(dev)
+	sensor = onewire.DS18S20(ow)
 	if len(sys.argv) < 1:
-		print "usage: python usbtest.py <on/off/read/write/onewire>"
+		print_usage()
 	elif sys.argv[1] == "on":
 		dev.ctrl_transfer(REQUEST_TYPE_IN, CtrlMsg.USB_LED_ON)
 	elif sys.argv[1] == "off":
@@ -35,33 +33,14 @@ def handleInput(dev):
 		dev.ctrl_transfer(REQUEST_TYPE_OUT, CtrlMsg.USB_WRITE_EEPROM, data_or_wLength=sys.argv[2])
 	elif sys.argv[1] == "onewire" and sys.argv[2] == "write":
 		dev.ctrl_transfer(REQUEST_TYPE_OUT, CtrlMsg.USB_ONEWIRE_WRITE, int(sys.argv[3]))
-def reset(dev):
-	onewire_send(dev, CtrlMsg.USB_ONEWIRE_RESET)
-	onewire_send(dev, CtrlMsg.USB_ONEWIRE_WRITE, 0xcc)
-	onewire_send(dev, CtrlMsg.USB_ONEWIRE_WRITE, 0x44)
-	time.sleep(1)
-	onewire_send(dev, CtrlMsg.USB_ONEWIRE_RESET)
-	onewire_send(dev, CtrlMsg.USB_ONEWIRE_WRITE, 0xcc)
-	onewire_send(dev, CtrlMsg.USB_ONEWIRE_WRITE, 0xbe)
-	print "Reading scratchpad"
-	#for i in range(9):
-	onewire_send(dev, CtrlMsg.USB_ONEWIRE_READ)
-	print "Reset"
-	onewire_send(dev, CtrlMsg.USB_ONEWIRE_RESET)
-
-def onewire_send(dev, msg, value = None):
-	if value != None:
-		dev.ctrl_transfer(REQUEST_TYPE_OUT, msg, value)
+	elif sys.argv[1] == "onewire" and sys.argv[2] == "get_temp":
+		print sensor.read_temp()
 	else:
-		dev.ctrl_transfer(REQUEST_TYPE_IN, msg, data_or_wLength=9)
-		
-	time.sleep(0.01)
-	res = None
-	if msg in (CtrlMsg.USB_ONEWIRE_READ, CtrlMsg.USB_ONEWIRE_READ_BIT, CtrlMsg.USB_ONEWIRE_RESET):
-		res = dev.ctrl_transfer(REQUEST_TYPE_IN, CtrlMsg.USB_READ_RESULT, data_or_wLength=32)
-		print res.tolist()
-		#time.sleep(0.01)
-	return res
+		print_usage()
+
+def print_usage():
+		print "usage: python usbtest.py <on/off/read/write/onewire>"
+
 			
 def main():
 	dev = connect()
