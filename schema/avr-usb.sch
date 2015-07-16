@@ -1,0 +1,170 @@
+EESchema Schematic File Version 2  date lör 22 dec 2012 21.16.28
+LIBS:power
+LIBS:device
+LIBS:transistors
+LIBS:conn
+LIBS:linear
+LIBS:regul
+LIBS:74xx
+LIBS:cmos4000
+LIBS:adc-dac
+LIBS:memory
+LIBS:xilinx
+LIBS:special
+LIBS:microcontrollers
+LIBS:dsp
+LIBS:microchip
+LIBS:analog_switches
+LIBS:motorola
+LIBS:texas
+LIBS:intel
+LIBS:audio
+LIBS:interface
+LIBS:digital-audio
+LIBS:philips
+LIBS:display
+LIBS:cypress
+LIBS:siliconi
+LIBS:opto
+LIBS:atmel
+LIBS:contrib
+LIBS:valves
+EELAYER 43  0
+EELAYER END
+$Descr A4 11700 8267
+Sheet 1 1
+Title ""
+Date "22 dec 2012"
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+Wire Wire Line
+	4150 3100 4150 3350
+Wire Wire Line
+	4150 3350 4100 3350
+Wire Wire Line
+	4900 3450 4100 3450
+Wire Wire Line
+	5850 5700 5850 5900
+Wire Wire Line
+	5600 4800 5850 4800
+Wire Wire Line
+	5250 4800 5450 4800
+Connection ~ 5250 5100
+Wire Wire Line
+	5250 4800 5250 5300
+Wire Wire Line
+	5450 4800 5450 4400
+Wire Wire Line
+	5600 4800 5600 4400
+Wire Wire Line
+	5850 4800 5850 5300
+Connection ~ 5850 5100
+Wire Wire Line
+	5250 5700 5250 5900
+Wire Wire Line
+	5750 4400 5750 4450
+Wire Wire Line
+	4100 3550 4900 3550
+Wire Wire Line
+	4100 3650 4100 3800
+$Comp
+L +5V #PWR?
+U 1 1 50D614DE
+P 4150 3100
+F 0 "#PWR?" H 4150 3190 20  0001 C CNN
+F 1 "+5V" H 4150 3190 30  0000 C CNN
+	1    4150 3100
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR?
+U 1 1 50D6143C
+P 4100 3800
+F 0 "#PWR?" H 4100 3800 30  0001 C CNN
+F 1 "GND" H 4100 3730 30  0001 C CNN
+	1    4100 3800
+	1    0    0    -1  
+$EndComp
+$Comp
+L USB_2 J1
+U 1 1 50D612FE
+P 3900 3500
+F 0 "J1" H 3825 3750 60  0000 C CNN
+F 1 "USB" H 3950 3200 60  0001 C CNN
+F 2 "VCC" H 4225 3650 50  0001 C CNN
+F 3 "D+" H 4200 3550 50  0001 C CNN
+F 4 "D-" H 4200 3450 50  0001 C CNN "Data-"
+F 5 "GND" H 4225 3350 50  0001 C CNN "Ground"
+	1    3900 3500
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR01
+U 1 1 50D610DB
+P 5750 4450
+F 0 "#PWR01" H 5750 4450 30  0001 C CNN
+F 1 "GND" H 5750 4380 30  0001 C CNN
+	1    5750 4450
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR02
+U 1 1 50D610C2
+P 5250 5900
+F 0 "#PWR02" H 5250 5900 30  0001 C CNN
+F 1 "GND" H 5250 5830 30  0001 C CNN
+	1    5250 5900
+	1    0    0    -1  
+$EndComp
+$Comp
+L GND #PWR03
+U 1 1 50D610B8
+P 5850 5900
+F 0 "#PWR03" H 5850 5900 30  0001 C CNN
+F 1 "GND" H 5850 5830 30  0001 C CNN
+	1    5850 5900
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C2
+U 1 1 50D60F99
+P 5850 5500
+F 0 "C2" H 5900 5600 50  0000 L CNN
+F 1 "22pF" H 5900 5400 50  0000 L CNN
+	1    5850 5500
+	1    0    0    -1  
+$EndComp
+$Comp
+L C C1
+U 1 1 50D60F91
+P 5250 5500
+F 0 "C1" H 5300 5600 50  0000 L CNN
+F 1 "22pF" H 5300 5400 50  0000 L CNN
+	1    5250 5500
+	1    0    0    -1  
+$EndComp
+$Comp
+L CRYSTAL X1
+U 1 1 50D60F77
+P 5550 5100
+F 0 "X1" H 5550 5250 60  0000 C CNN
+F 1 "20MHz" H 5550 4950 60  0000 C CNN
+	1    5550 5100
+	1    0    0    -1  
+$EndComp
+$Comp
+L ATTINY2313-P IC?
+U 1 1 50D60F40
+P 5600 3900
+F 0 "IC?" H 5100 5000 50  0000 L BNN
+F 1 "ATTINY2313-P" H 4700 3500 50  0000 L BNN
+F 2 "DIL20" H 5050 3450 50  0001 C CNN
+	1    5600 3900
+	1    0    0    -1  
+$EndComp
+$EndSCHEMATC

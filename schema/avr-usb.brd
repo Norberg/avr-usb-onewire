@@ -1,0 +1,286 @@
+PCBNEW-BOARD Version 1 date lör 22 dec 2012 21.40.03
+
+# Created by Pcbnew(2010-03-14)-final
+
+$GENERAL
+LayerCount 2
+Ly 1FFF8001
+EnabledLayers 1FFF8001
+Links 0
+NoConn 0
+Di 60425 33725 71575 43530
+Ndraw 0
+Ntrack 0
+Nzone 0
+BoardThickness 630
+Nmodule 2
+Nnets 1
+$EndGENERAL
+
+$SHEETDESCR
+Sheet A4 11700 8267
+Title ""
+Date "22 dec 2012"
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndSHEETDESCR
+
+$SETUP
+InternalUnit 0.000100 INCH
+ZoneGridSize 250
+Layers 2
+Layer[0] Back signal
+Layer[15] Front signal
+TrackWidth 80
+TrackClearence 1
+ZoneClearence 200
+TrackMinWidth 80
+DrawSegmWidth 150
+EdgeSegmWidth 150
+ViaSize 350
+ViaDrill 250
+ViaMinSize 350
+ViaMinDrill 200
+MicroViaSize 200
+MicroViaDrill 50
+MicroViasAllowed 0
+MicroViaMinSize 200
+MicroViaMinDrill 50
+TextPcbWidth 120
+TextPcbSize 600 800
+EdgeModWidth 150
+TextModSize 600 600
+TextModWidth 120
+PadSize 600 600
+PadDrill 320
+Pad2MaskClearance 100
+AuxiliaryAxisOrg 0 0
+$EndSETUP
+
+$EQUIPOT
+Na 0 ""
+St ~
+$EndEQUIPOT
+$NCLASS
+Name "Default"
+Desc "This is the default net class."
+Clearance 1
+TrackWidth 80
+ViaDia 350
+ViaDrill 250
+uViaDia 200
+uViaDrill 50
+AddNet ""
+$EndNCLASS
+$MODULE DIP-20__300
+Po 66000 35500 0 15 50D61630 50D61839 ~~
+Li DIP-20__300
+Cd 20 pins DIL package, round pads
+Kw DIL
+Sc 50D61839
+AR 
+Op 0 0 0
+T0 -3500 -500 700 450 0 113 N V 21 N"U1"
+T1 2500 500 700 450 0 113 N V 21 N"ATTiny2313"
+DS -5500 -500 -5000 -500 150 21
+DS -5000 -500 -5000 500 150 21
+DS -5000 500 -5500 500 150 21
+DS -5500 -1000 5500 -1000 150 21
+DS 5500 -1000 5500 1000 150 21
+DS 5500 1000 -5500 1000 150 21
+DS -5500 1000 -5500 -1000 150 21
+$PAD
+Sh "1" R 550 550 0 0 0
+Dr 320 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po -4500 1500
+$EndPAD
+$PAD
+Sh "2" C 550 550 0 0 0
+Dr 320 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po -3500 1500
+$EndPAD
+$PAD
+Sh "3" C 550 550 0 0 0
+Dr 320 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po -2500 1500
+$EndPAD
+$PAD
+Sh "4" C 550 550 0 0 0
+Dr 320 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po -1500 1500
+$EndPAD
+$PAD
+Sh "5" C 550 550 0 0 0
+Dr 320 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po -500 1500
+$EndPAD
+$PAD
+Sh "6" C 550 550 0 0 0
+Dr 320 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 500 1500
+$EndPAD
+$PAD
+Sh "7" C 550 550 0 0 0
+Dr 320 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 1500 1500
+$EndPAD
+$PAD
+Sh "8" C 550 550 0 0 0
+Dr 320 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 2500 1500
+$EndPAD
+$PAD
+Sh "9" C 550 550 0 0 0
+Dr 320 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 3500 1500
+$EndPAD
+$PAD
+Sh "10" C 550 550 0 0 0
+Dr 320 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 4500 1500
+$EndPAD
+$PAD
+Sh "11" C 550 550 0 0 0
+Dr 320 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 4500 -1500
+$EndPAD
+$PAD
+Sh "12" C 550 550 0 0 0
+Dr 320 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 3500 -1500
+$EndPAD
+$PAD
+Sh "13" C 550 550 0 0 0
+Dr 320 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 2500 -1500
+$EndPAD
+$PAD
+Sh "14" C 550 550 0 0 0
+Dr 320 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 1500 -1500
+$EndPAD
+$PAD
+Sh "15" C 550 550 0 0 0
+Dr 320 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 500 -1500
+$EndPAD
+$PAD
+Sh "16" C 550 550 0 0 0
+Dr 320 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po -500 -1500
+$EndPAD
+$PAD
+Sh "17" C 550 550 0 0 0
+Dr 320 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po -1500 -1500
+$EndPAD
+$PAD
+Sh "18" C 550 550 0 0 0
+Dr 320 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po -2500 -1500
+$EndPAD
+$PAD
+Sh "19" C 550 550 0 0 0
+Dr 320 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po -3500 -1500
+$EndPAD
+$PAD
+Sh "20" C 550 550 0 0 0
+Dr 320 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po -4500 -1500
+$EndPAD
+$SHAPE3D
+Na "dil/dil_20.wrl"
+Sc 1.000000 1.000000 1.000000
+Of 0.000000 0.000000 0.000000
+Ro 0.000000 0.000000 0.000000
+$EndSHAPE3D
+$EndMODULE  DIP-20__300
+$MODULE HC-18UV
+Po 64500 42500 0 15 42899E71 50D619F2 ~~
+Li HC-18UV
+Cd Quartz boitier HC-18U vertical
+Kw QUARTZ DEV
+Sc 50D619F2
+AR 
+Op 0 A 0
+T0 -50 -700 450 500 0 60 N V 21 N"X***"
+T1 0 650 450 500 0 60 N V 21 N"HC-18UV"
+DS -2750 -500 -2250 -1000 60 21
+DS 2250 -1000 2750 -500 60 21
+DS 2750 500 2250 1000 60 21
+DS -2750 500 -2250 1000 60 21
+DS -2250 -1000 2250 -1000 60 21
+DS -2750 -500 -2750 500 60 21
+DS -2250 1000 2250 1000 60 21
+DS 2750 500 2750 -500 60 21
+$PAD
+Sh "1" C 700 700 0 0 0
+Dr 320 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po -1000 0
+$EndPAD
+$PAD
+Sh "2" C 700 700 0 0 0
+Dr 320 0 0
+At STD N 00E0FFFF
+Ne 0 ""
+Po 1000 0
+$EndPAD
+$SHAPE3D
+Na "discret/crystal_hc18u_vertical.wrl"
+Sc 1.000000 1.000000 1.000000
+Of 0.000000 0.000000 0.000000
+Ro 0.000000 0.000000 0.000000
+$EndSHAPE3D
+$EndMODULE  HC-18UV
+$TRACK
+$EndTRACK
+$ZONE
+$EndZONE
+$EndBOARD
