@@ -10,16 +10,20 @@ void write_bit(uint8_t value)
 	OW_DDR |= _BV(OW_PIN); /* Output */
 	if(value) /* Write 1 bit */
 	{
+		cli();
 		OW_PORT &= ~_BV(OW_PIN); /* Drive bus low */
 		_delay_us(6); /* Delay A(6us) */
 		OW_PORT |= _BV(OW_PIN); /* Release bus */
+		sei();
 		_delay_us(63); /* Delay B(64 -1 us) */
 	}
 	else /* Write 0 bit */
 	{
+		cli();
 		OW_PORT &= ~_BV(OW_PIN); /* Drive bus low */
 		_delay_us(60); /* Delay C(60us) */
 		OW_PORT |= _BV(OW_PIN); /* Release bus */
+		sei();
 		_delay_us(9); /* Delay D(10-1 us) */
 	}			
 }
@@ -75,5 +79,6 @@ void write_byte(uint8_t value)
 	{
 		write_bit(value & 0x01);
 		value >>= 1; /* Shift to get ready for next bit */
+		_delay_us(10); /* Give interrupt a chance to happen*/
 	}
 }

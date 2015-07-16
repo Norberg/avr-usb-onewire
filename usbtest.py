@@ -35,6 +35,10 @@ def handleInput(dev):
 		dev.ctrl_transfer(REQUEST_TYPE_OUT, CtrlMsg.USB_ONEWIRE_WRITE, int(sys.argv[3]))
 	elif sys.argv[1] == "onewire" and sys.argv[2] == "get_temp":
 		print sensor.read_temp()
+	elif sys.argv[1] == "onewire" and sys.argv[2] == "search":
+		for i in range (1000):
+			print "i=", i
+			print ow.search()
 	else:
 		print_usage()
 
