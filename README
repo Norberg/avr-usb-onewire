@@ -1,22 +1,13 @@
-LCD Bluetooth
+AVR USB OneWire
+
+OneWire implementation on AVR with USB connection.
 
 Hardware:
 AVR ATTiny2313
-Bluetooth UART module: eg. http://www.dealextreme.com/p/wireless-bluetooth-rs232-ttl-transceiver-module-80711?item=1
-HD44780 compatible LCD display
 
-How to connect the hardware:
-AVR -> LCD
-Choose PINS to use in lib/dm_lcd.h
-AVR -> Bluetooth
-Connect the bluetooth modules rx/tx with the avrs tx/rx
-
-Protocol:
-First byte after the controll character 0xfe will be treated as a HD44780 command, all other bytes as regular data(eg. chars printed to the display)  
-
-Pic of the working hardware:
-http://imgur.com/F32Fb
-
-Connecting device in Linux:
-hcitool scan
-sudo rfcomm bind 0 00:11:12:07:05:22 1
+Udev:
+Make the device accessible by ordinary user:
+edit udev-rules/onewire.rules and change GROUPS to match the user groups that should have access
+sudo cp udev-rules/onewire.rules /etc/udev/rules.d/
+sudo service udev restart
+plug in the device again
