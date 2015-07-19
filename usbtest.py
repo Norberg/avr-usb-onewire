@@ -6,14 +6,14 @@ from constants import *
 import onewire
 
 def match_manufacturer(dev):
-	if usb.util.get_string(dev,126, dev.iManufacturer) == "pthread.se":
+	if usb.util.get_string(dev, dev.iManufacturer) == "pthread.se":
 		return True
 	return False
 
 def connect():
 	dev = usb.core.find(idVendor=0x16c0, idProduct=0x05dc, custom_match=match_manufacturer)
 	if dev == None:
-		print "No device found, exiting.."
+		print("No device found, exiting..")
 		return
 	dev.set_configuration()
 	return dev
@@ -28,28 +28,26 @@ def handleInput(dev):
 	elif sys.argv[1] == "off":
 		dev.ctrl_transfer(REQUEST_TYPE_IN, CtrlMsg.USB_LED_OFF)
 	elif sys.argv[1] == "read":
-		print dev.ctrl_transfer(REQUEST_TYPE_IN, CtrlMsg.USB_READ_EEPROM, data_or_wLength=32).tostring()
+		print(dev.ctrl_transfer(REQUEST_TYPE_IN, CtrlMsg.USB_READ_EEPROM, data_or_wLength=32).tostring())
 	elif sys.argv[1] == "write":
 		dev.ctrl_transfer(REQUEST_TYPE_OUT, CtrlMsg.USB_WRITE_EEPROM, data_or_wLength=sys.argv[2])
 	elif sys.argv[1] == "onewire" and sys.argv[2] == "write":
 		dev.ctrl_transfer(REQUEST_TYPE_OUT, CtrlMsg.USB_ONEWIRE_WRITE, int(sys.argv[3]))
 	elif sys.argv[1] == "onewire" and sys.argv[2] == "get_temp":
-		print sensor.read_temp()
+		print(sensor.read_temp())
 	elif sys.argv[1] == "onewire" and sys.argv[2] == "search":
-		for i in range (1000):
-			print "i=", i
-			print ow.search()
+		print(ow.search())
 	else:
 		print_usage()
 
 def print_usage():
-		print "usage: python usbtest.py <on/off/read/write/onewire>"
+		print("usage: python usbtest.py <on/off/read/write/onewire>")
 
-			
+
 def main():
 	dev = connect()
 	handleInput(dev)
 
-		
+
 if __name__ == "__main__":
 	main()
